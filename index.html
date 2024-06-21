@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <title>Handyman</title>
+    <style>
+        :root {
+            --dark-bg: #3b412b;
+            /* Dark Olive Green */
+            --dark-text: #c1d68d;
+            /* Sage */
+            --light-bg: #ffffdb;
+            /* Light Cream */
+            --light-text: #596241;
+            /* Olive Green */
+            --dark-third-color: #dbf0a6;
+            /* Sage */
+            --light-third-color: #778357;
+            /* Moss Green as a vibrant accent */
+            --transition-speed: 0.25s;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease;
+        }
+
+        .text-light-third {
+            color: var(--light-third-color);
+        }
+
+        .dark-mode .text-dark-third {
+            color: var(--dark-third-color);
+        }
+
+        .accent-color {
+            color: var(--light-third-color);
+        }
+
+        .dark-mode .accent-color {
+            color: var(--dark-third-color);
+        }
+
+        .dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        nav {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .btn {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            border: 2px solid transparent;
+        }
+
+        .dark-mode .btn {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            border: 2px solid transparent;
+        }
+
+        .btn-inverted {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            border: 2px solid var(--dark-bg);
+        }
+
+        .dark-mode .btn-inverted {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            border: 2px solid var(--light-bg);
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--light-text);
+            border-color: #4a5568;
+        }
+
+        .btn-inverted:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: var(--third-color);
+        }
+
+        .dark-mode .btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--dark-text);
+            border-color: #cbd5e0;
+        }
+
+        .dark-mode .btn-inverted:hover {
+            background-color: var(--third-color);
+            border-color: var(--third-color);
+        }
+
+        .icon-svg2 {
+            width: 25px;
+            height: 25px;
+            vertical-align: middle;
+            stroke: green;
+            fill: greenyellow;
+
+        }
+
+        .icon-svg {
+            width: 25px;
+            height: 25px;
+            vertical-align: middle;
+
+        }
+
+
+        /* Notification pop-up styles */
+        #notification {
+            position: fixed;
+            top: 20px;
+            /* Adjust this value to change the vertical location */
+            left: 50%;
+            transform: translateX(-50%);
+            /* Center horizontally */
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 6px var(--dark-bg);
+            transition: all 0.5s ease;
+            border: 2px solid;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 3px;
+                /* Added 3px padding for small screens */
+            }
+        }
+
+        .wide-button {
+            padding: 0 60px;
+        }
+
+        /* Chatbot Styles */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .chatbot-toggler {
+            position: fixed;
+            bottom: 30px;
+            right: 35px;
+            outline: none;
+            border: 2px solid white;
+            height: 75px;
+            width: 75px;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            /* background: var(--dark-bg); */
+            transition: all 0.2s ease;
+        }
+
+        body.show-chatbot .chatbot-toggler {
+            transform: rotate(90deg);
+        }
+
+        .chatbot-toggler span {
+            color: #fff;
+            position: absolute;
+        }
+
+        .chatbot-toggler span:last-child,
+        body.show-chatbot .chatbot-toggler span:first-child {
+            opacity: 0;
+        }
+
+        body.show-chatbot .chatbot-toggler span:last-child {
+            opacity: 1;
+        }
+
+        .chatbot {
+            position: fixed;
+            right: 35px;
+            bottom: 90px;
+            width: 420px;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.5);
+            transform-origin: bottom right;
+            box-shadow: 0 0 128px 0 rgba(0, 0, 0, 0.1),
+                0 32px 64px -48px rgba(0, 0, 0, 0.5);
+            transition: all 0.1s ease;
+        }
+
+        body.show-chatbot .chatbot {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .chatbot header {
+            padding: 16px 0;
+            position: relative;
+            text-align: center;
+            color: #fff;
+            background: var(--dark-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot header span {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            display: none;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        header h2 {
+            font-size: 1.4rem;
+        }
+
+        .chatbot .chatbox {
+            overflow-y: auto;
+            height: 510px;
+            padding: 30px 20px 100px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar-track {
+            background: #fff;
+            border-radius: 25px;
+        }
+
+        .chatbot :where(.chatbox, textarea)::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 25px;
+        }
+
+        .chatbox .chat {
+            display: flex;
+            list-style: none;
+        }
+
+        .chatbox .outgoing {
+            margin: 20px 0;
+            justify-content: flex-end;
+        }
+
+        .chatbox .incoming span {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            cursor: default;
+            text-align: center;
+            line-height: 32px;
+            align-self: flex-end;
+            background: var(--dark-bg);
+            border-radius: 4px;
+            margin: 0 10px 7px 0;
+        }
+
+        .chatbox .chat p {
+            white-space: pre-wrap;
+            padding: 12px 16px;
+            border-radius: 10px 10px 0 10px;
+            max-width: 75%;
+            color: #fff;
+            font-size: 0.95rem;
+            background: var(--dark-bg);
+        }
+
+        .chatbox .incoming p {
+            border-radius: 10px 10px 10px 0;
+        }
+
+        .chatbox .chat p.error {
+            color: #721c24;
+            background: #f8d7da;
+        }
+
+        .chatbox .incoming p {
+            color: #000;
+            background: #f2f2f2;
+        }
+
+        .chatbot .chat-input {
+            display: flex;
+            gap: 5px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            padding: 3px 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input textarea {
+            height: 55px;
+            width: 100%;
+            color: grey;
+            border: none;
+            outline: none;
+            resize: none;
+            max-height: 180px;
+            padding: 15px 15px 15px 0;
+            font-size: 0.95rem;
+        }
+
+        .dark-mode .chat-input textarea {
+            color: grey;
+            /* Override the color in dark mode */
+        }
+
+        .chat-input span {
+            align-self: flex-end;
+            color: var(--dark-bg);
+            cursor: pointer;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            visibility: hidden;
+            font-size: 1.35rem;
+        }
+
+        .chat-input textarea:valid~span {
+            visibility: visible;
+        }
+
+        @media (max-width: 490px) {
+            .chatbot-toggler {
+                right: 20px;
+                bottom: 20px;
+            }
+
+            .chatbot {
+                right: 0;
+                bottom: 0;
+                height: 100%;
+                border-radius: 0;
+                width: 100%;
+            }
+
+            .chatbot .chatbox {
+                height: 90%;
+                padding: 25px 15px 100px;
+            }
+
+            .chatbot .chat-input {
+                padding: 5px 15px;
+            }
+
+            .chatbot header span {
+                display: block;
+            }
+        }
+
+        .monochrome {
+            font-size: 25px;
+            color: black;
+            filter: grayscale(100%);
+        }
+
+        /* Chatbot dark mode styles */
+
+
+
+
+        .material-symbols-outlined {
+            color: var(--light-color);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .dark-mode .material-symbols-outlined {
+            color: var(--dark-color);
+        }
+
+        /* Light mode */
+        .one-click-book .right-column {
+            border-color: var(--light-third-color);
+            /* Use the defined light theme accent color */
+        }
+
+        /* Dark mode */
+        .dark-mode .one-click-book .right-column {
+            border-color: var(--dark-third-color);
+            /* Use the defined dark theme accent color */
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
+    <!-- <script src="https://js.stripe.com/v3/"></script> -->
+    <!-- <script async src="https://js.stripe.com/v3/buy-button.js"></script> -->
+</head>
+
+<body class="sm:px-10 md:px-10 lg:px-20 xl:px-60 justify-center items-center">
+    <!-- Existing body content here -->
+    <nav id="navbar"
+        class="fixed top-0 left-0 w-full flex justify-between items-center px-5 py-3 z-50 sm:px-10 md:px-10 lg:px-20 xl:px-60">
+        <div class="flex space-x-4">
+            <a href="#about" class="flex items-center">
+                <img id="cake-icon" src="static/cake-light.svg" class="icon-svg2">
+
+                <p id="company-name" class="text-xl font-bold" style="padding-left: 10px">Handyman Harrison</p>
+
+            </a>
+            <div class="hidden md:flex lg:flex" style="margin-top: 3px; padding-left: 4px">
+                <a href="#about" class="hover:underline pl-8" aria-label="About section">About</a>
+                <span style="padding-left: 20px"></span>
+                <a href="#products" class="hover:underline" aria-label="Contents section">Services</a>
+                <span style="padding-left: 20px"></span>
+                <a href="#contact" class="hover:underline" aria-label="Contact section">Contact</a>
+            </div>
+        </div>
+
+        <div class="flex items-center">
+            <div id="cart-total" style="padding-right: 20px; display: none;">
+                €0
+            </div>
+
+
+            <button onclick="toggleLanguage()" class="text-sm font-medium ml-4" style="padding-right: 20px;">Es</button>
+
+
+            <button class="whatsapp-button" onclick="window.open('https://wa.me/61419233409', '_blank')">
+                <img id="whatsapp-icon" src="static/whatsapp-light.svg" alt="WhatsApp Icon"
+                    style="height: 21px; padding-right: 10px; cursor: pointer;">
+            </button>
+
+            <a href="https://instagram.com/" target="_blank" id="svg-link">
+                <svg height="30px" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" stroke-width="2"></rect>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zM17.5 6.5h.01"></path>
+                </svg>
+            </a>
+
+
+            <div onclick="toggleDarkMode()" aria-label="Toggle section" class="h-6 w-6 text-gray-400 mr-2">
+                <div id="theme-icon2" style="height: 20px"><img src="static/moon4.svg" class="icon-svg" alt="M">
+                </div>
+            </div>
+
+            <!-- <a id="darkModeToggle" class="hover:underline mr-4 ml-5"aria-label="Toggle section">Login</a> -->
+
+            <div class="lg:hidden md:hidden">
+                <button id="nav-toggle" class="focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden absolute bg-gray-800 w-full top-14 lg:hidden">
+            <div class="px-2 py-3">
+                <a href="#about" class="block text-white hover:text-gray-300 py-2" onclick="toggleMobileMenu()">Home</a>
+                <a href="#about" class="block text-white hover:text-gray-300 py-2"
+                    onclick="toggleMobileMenu()">About</a>
+                <a href="#products" class="block text-white hover:text-gray-300 py-2"
+                    onclick="toggleMobileMenu()">Products</a>
+                <a href="#cart" class="block text-white hover:text-gray-300 py-2" onclick="toggleMobileMenu()">Cart</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="about" class="bg-cover bg-center pt-5">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
+                <div class="space-y-4">
+                    <h1 id="main-product-message"
+                        class="text-4xl font-bold tracking-tight sm:text-5xl md:text-4xl lg:text-5xl">Reliable Household
+                        Maintenance Services. Quality Workmanship Starting at €35.00 per hour</h1>
+                    <p id="product-description" class="accent-color">Welcome
+                        to Handyman Harrison, your go-to expert for all your household
+                        maintenance needs. From carpentry to basic plumbing, our skilled
+                        craftsmanship ensures your home projects are completed with precision
+                        and care.</p>
+                    <div class="flex flex-col gap-2 sm:flex-row">
+                        <button onclick="scrollToBooking()" id="get-started-btn "
+                            class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">Book
+                            Now</button>
+                        <!-- <button onclick="addToCart('Best Seller Cheese Cake', 20, 'price_1PE9xaHZkD7QNf2hq8eqRR74')"
+                            class="btn btn-inverted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 border border-current hover:bg-darker">
+                            Contact
+                        </button> -->
+                        <button onclick="scrollToContact()"
+                            class="btn btn-inverted inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 border border-current hover:bg-darker">
+                            Contact
+                        </button>
+                    </div>
+
+                </div>
+                <img src="static/handyman.png" width="800" height="600" alt="Hero Image"
+                    class="mx-auto aspect-video overflow-hidden rounded-xl object-cover">
+            </div>
+        </div>
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="container space-y-12 px-4 md:px-6">
+                <div class="flex flex-col items-center justify-center space-y-4 text-center">
+                    <div class="space-y-2">
+                        <div id="key-features-label" class="inline-block rounded-lg px-3 py-1 text-sm">- Your Handy Man
+                            in Barcelona -</div>
+                        <h2 id="product-line-reason" class="text-3xl font-bold tracking-tighter sm:text-5xl">Why Choose
+                            Handyman Harrison?</h2>
+                        <p id="product-line-description" class="accent-color">Expertise, reliability, and personalized
+                            service. Experience the difference with our comprehensive home maintenance solutions.</p>
+                    </div>
+                </div>
+                <div class="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
+                    <div class="grid gap-1">
+                        <h3 id="feature-1-title" class="text-lg font-bold">General Maintenance</h3>
+                        <p id="feature-1-description" class="accent-color">Keep your home in top condition with our general maintenance services.</p>
+                    </div>
+                    <div class="grid gap-1">
+                        <h3 id="feature-2-title" class="text-lg font-bold">Custom Carpentry</h3>
+                        <p id="feature-2-description" class="accent-color">Enhance your home with custom carpentry solutions tailored to your needs.</p>
+                    </div>
+                    <div class="grid gap-1">
+                        <h3 id="feature-3-title" class="text-lg font-bold">Furniture Assembly</h3>
+                        <p id="feature-3-description" class="accent-color">Effortlessly put together your furniture with our professional assembly services.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="bg-cover bg-center pt-10">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="py-8">
+                <h2 id="products-label" class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">Our Services</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <img alt="First Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto1.jpg" style="aspect-ratio: 16/9">
+                        <h3 id="first-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">General
+                            Maintenance</h3>
+                        <p id="first-product-description" class="accent-color">From minor repairs to routine upkeep, we
+                            handle all your home maintenance needs.</p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€29.99</span>
+                            <button onclick="addToCart('Classic Cheesecake', 29.99, 'price_1PH0r1HZkD7QNf2hRY3w7XVX')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+                    <div>
+                        <img alt="Second Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto2.jpg" style="aspect-ratio: 16/9">
+                        <h3 id="second-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">Custom
+                            Carpentry</h3>
+                        <p id="second-product-description" class="accent-color">Bespoke carpentry solutions designed to
+                            enhance the beauty and functionality of your home.</p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€30.00</span>
+                            <button onclick="addToCart('Lemon Bliss Cake', 30, 'price_1PH0wGHZkD7QNf2hFFbQKWbu')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+                    <div>
+                        <img alt="Third Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto3.jpg" style="aspect-ratio: 16/9">
+                        <h3 id="third-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            Furniture Assembly</h3>
+                        <p id="third-product-description" class="accent-color">Quick and reliable furniture assembly,
+                            ensuring your pieces are put together correctly and safely.</p>
+                        <!-- <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€19.99</span>
+                            <button onclick="addToCart('Mascarpone Heaven', 19.99, 'price_1PH0wvHZkD7QNf2hez1RX7Df')"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                Add to cart
+                            </button>
+                        </div> -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="stripe-cards" class="bg-cover bg-center pt-10" style="display: none;">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="py-8">
+                <h2 id="products-label" class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                    Products
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                    <div>
+                        <stripe-buy-button buy-button-id="buy_btn_1PSfJeABPc82jQsqlTBPYcqc"
+                            publishable-key="pk_test_51PHppWABPc82jQsqJMT6NNF6FyXjOuN3SluOcoPmwZLcd9zGKYjhk3Z6KE3t3qs3D802jvFe1AJdDtnzhg7Q7Uvk00TndAMjho">
+                        </stripe-buy-button>
+                    </div>
+
+                    <div>
+                        <stripe-buy-button buy-button-id="buy_btn_1PSfJeABPc82jQsqlTBPYcqc"
+                            publishable-key="pk_test_51PHppWABPc82jQsqJMT6NNF6FyXjOuN3SluOcoPmwZLcd9zGKYjhk3Z6KE3t3qs3D802jvFe1AJdDtnzhg7Q7Uvk00TndAMjho">
+                        </stripe-buy-button>
+                    </div>
+                    <div>
+                        <stripe-buy-button buy-button-id="buy_btn_1PSfJeABPc82jQsqlTBPYcqc"
+                            publishable-key="pk_test_51PHppWABPc82jQsqJMT6NNF6FyXjOuN3SluOcoPmwZLcd9zGKYjhk3Z6KE3t3qs3D802jvFe1AJdDtnzhg7Q7Uvk00TndAMjho">
+                        </stripe-buy-button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <!-- <section id="stripe-buttons" class="bg-cover bg-center pt-10">
+        <div class="w-full py-12 md:py-24 lg:py-32">
+            <div class="py-8">
+                <h2 id="products-label" class="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+                    Products
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <img alt="First Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto1.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="first-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            First Product
+                        </h3>
+                        <p id="first-product-description" class="accent-color">
+                            This is a brief summary of the first product. It includes details and specifications of this
+                            product.
+                        </p>
+                        <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€ Price</span>
+                            <button class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background 
+                            transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                            disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter" onclick="window.open('https://buy.stripe.com/test_3cs7tE5bVcjqd20fYY')">Buy</button>
+
+                        </div>
+                    </div>
+                    <div>
+                        <img alt="Second Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto2.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="second-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            Second Product
+                        </h3>
+                        <p id="second-product-description" class="accent-color">
+                            This is a brief summary of the second product. It includes details and specifications of
+                            this product.
+                        </p>
+                        <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€ Price</span>
+                            <stripe-buy-button buy-button-id="buy_btn_1PSfJeABPc82jQsqlTBPYcqc"
+                                publishable-key="pk_test_51PHppWABPc82jQsqJMT6NNF6FyXjOuN3SluOcoPmwZLcd9zGKYjhk3Z6KE3t3qs3D802jvFe1AJdDtnzhg7Q7Uvk00TndAMjho">
+                            </stripe-buy-button>
+                        </div>
+                    </div>
+                    <div>
+                        <img alt="Third Product Image" class="w-full h-64 object-cover object-center rounded-lg"
+                            src="static/producto3.jpg" style="aspect-ratio: 16/9" />
+                        <h3 id="third-product-title" class="text-lg md:text-xl lg:text-2xl font-bold mb-2 mt-4">
+                            Third Product
+                        </h3>
+                        <p id="third-product-description" class="accent-color">
+                            This is a brief summary of the third product. It includes details and specifications of this
+                            product.
+                        </p>
+                        <div style="margin-top: 8px">
+                            <span class="mt-4 mr-4">€ Price</span>
+                            <button onclick="toggleChatbot()"
+                                class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                                View Listing
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+
+    <section id="one-click-book" class="w-full py-12 md:py-24 lg:py-32 bg-muted ">
+        <div class="container mx-auto grid items-center justify-center gap-6 md:px-6 max-w-screen-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center md:text-left max-w-[600px] w-full">
+                <div class="grid gap-4">
+                    <div class="inline-block rounded-lg bg-primary py-1 text-sm font-medium text-primary-foreground">
+                        Handyman Services
+                    </div>
+                    <h2 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                        One-hour Booking.
+                    </h2>
+                    <p class="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        From minor repairs to complete installations, our experienced handymen are here to help.
+                        Certified,
+                        insured, and backed by a 100% satisfaction guarantee.
+                    </p>
+                </div>
+                <div class="flex flex-col items-center gap-4 border right-column"
+                    style="padding-top: 45px; padding-bottom: 25px; border-radius: 10px;">
+                    <h2 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl">$35 </h2>
+                    <button class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background 
+                    transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                    disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter"
+                        onclick="window.open('https://buy.stripe.com/test_9AQ15pe8i9DZd4A288')">Book Now</button>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+    <section id="contact" class="w-full py-12 md:py-24 lg:py-32 flex justify-center items-center">
+        <div class="max-w-4xl px-4 md:px-6 w-full">
+            <div class="space-y-8 text-center">
+                <div class="space-y-2">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter">Get in Touch</h2>
+
+                    <h2 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-4xl" style="padding-top: 15px;">Tel: 648 254 456  - (What's App)</h2>
+                    <p>
+                        Have a question or want to work together? Fill out the form below and we'll get back to you as
+                        soon as
+                        possible.
+                    </p>
+                </div>
+                <form class="space-y-4">
+                    <!-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium" for="name">Name</label>
+                            <input
+                                class="h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                id="name" placeholder="Enter your name" required="">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium" for="email">Email</label>
+                            <input
+                                class="h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                id="email" placeholder="Enter your email" required="" type="email">
+                        </div>
+                    </div> -->
+                    <div class="form-container">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium" for="message">Message</label>
+                            <textarea
+                                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent min-h-[120px]"
+                                id="message" placeholder="Enter your message" required=""></textarea>
+                        </div>
+                    </div>
+                    <button
+                    class="btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background 
+                    transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                    disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter"
+                        type="submit">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="cart" class="bg-cover bg-center flex justify-center items-center min-h-screen" style="display: none;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 class="text-2xl font-bold mb-6">Your Cart</h1>
+            <div class="bg-white rounded-lg shadow-md">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 font-medium">
+                            <th class="py-3 px-4 text-left" style="width: 50%">Product</th>
+                            <th class="py-3 px-4 text-right" style="width: 16%">Price</th>
+                            <th class="py-3 px-4 text-right" style="width: 16%">Quantity</th>
+                            <th class="py-3 px-4 text-right" style="width: 18%">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items">
+                        <!-- Dynamic cart items will be inserted here -->
+                    </tbody>
+                </table>
+                <div class="py-4 px-4 flex justify-end">
+                    <div class="text-right">
+                        <p class="text-gray-500">Total</p>
+                        <div id="total-price" class="text-2xl font-bold text-gray-600">€0.00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="py-4 px-4 flex justify-between">
+                <button onclick="clearCart()" class="px-4 py-2 rounded">Clear Cart</button>
+                <button id="checkout-button"
+                    class="wide-button btn inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 hover:bg-lighter">
+                    Buy
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full py-8">
+        <div class="container mx-auto flex flex-col items-center justify-between gap-6 px-4 md:flex-row md:gap-0">
+            <div class="flex items-center gap-2">
+
+                <span><a href="#about" id="footer-company-name" class="text-lg font-medium">Handyman Harrison</a></span>
+            </div>
+            <nav class="flex flex-wrap items-center justify-center gap-4 md:justify-end">
+                <a class="text-sm hover:text-gray-300" href="#about">Home</a>
+                <a class="text-sm hover:text-gray-300" href="#">About</a>
+                <a class="text-sm hover:text-gray-300" href="#products">Services</a>
+                <a class="text-sm hover:text-gray-300" href="#cart">Contact</a>
+            </nav>
+            <p id="footer-text" class="text-sm">© 2024 Handyman Harrison. </p>
+        </div>
+    </footer>
+
+    <div id="notification"></div>
+
+
+
+    <a href="https://wa.me/+61419233409" class="chatbot-toggler">
+        <span class="icon-wrapper">
+            <img src="static/logo_whatsapp_icon.png" alt="Icon" class="icon-image">
+        </span>
+        <span class="material-symbols-outlined">close</span>
+    </a>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+
+            let currentLanguage = 'en';
+
+
+
+
+
+
+            function toggleLanguage() {
+                currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+                updateTextContent(currentLanguage);
+            }
+
+            // Initial content load
+            updateTextContent(currentLanguage);
+
+            // Add the event listener for the language toggle button
+            const langToggleBtn = document.querySelector('.language-toggle-button');
+            if (langToggleBtn) {
+                langToggleBtn.addEventListener('click', toggleLanguage);
+            }
+
+            // Oth
+
+            document.querySelectorAll("nav a").forEach((link) => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const href = this.getAttribute("href");
+                    if (href && href.startsWith('#')) { // Only proceed if it's a fragment identifier
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ behavior: "smooth" });
+                        }
+                    } else {
+                        // If it's not a fragment identifier, it might be an external link
+                        window.open(href, '_blank');
+                    }
+                });
+            });
+
+            // Other initialization code
+            const isDarkMode = localStorage.getItem("darkMode") === "true";
+            document.body.classList.toggle("dark-mode", isDarkMode);
+            document.getElementById("cake-icon").src = isDarkMode ? "static/cake-dark.svg" : "static/cake-light.svg";
+            document.getElementById("whatsapp-icon").src = isDarkMode ? "static/whatsapp-dark.svg" : "static/whatsapp-light.svg";
+
+            document.getElementById("theme-icon2").innerHTML = isDarkMode ? '<img src="static/sun4.svg" class="icon-svg" alt="S">' : '<img src="static/moon4.svg" class="icon-svg" alt="M">';
+            var svgLink = document.querySelector('#svg-link');
+
+        });
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle("dark-mode");
+            localStorage.setItem("darkMode", isDarkMode);
+            document.getElementById("theme-icon2").innerHTML = isDarkMode ? '<img src="static/sun4.svg" class="icon-svg" alt="S">' : '<img src="static/moon4.svg" class="icon-svg" alt="M">';
+            document.getElementById("cake-icon").src = isDarkMode ? "static/cake-dark.svg" : "static/cake-light.svg";
+            document.getElementById("whatsapp-icon").src = isDarkMode ? "static/whatsapp-dark.svg" : "static/whatsapp-light.svg";
+        }
+
+        let notificationTimeout;
+
+        const navToggle = document.getElementById("nav-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        navToggle.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById("mobile-menu");
+            mobileMenu.classList.toggle("hidden");
+        }
+        let currentLanguage = 'en';
+        const textContent = {
+            en: {
+                "companyName": "Handyman Harrison",
+                "mainProductMessage": "Reliable Household Maintenance Services. Quality Workmanship Starting at €35.00 per hour",
+                "productDescription": "Welcome to Handyman Harrison, your go-to expert for all your household maintenance needs. From carpentry to basic plumbing, our skilled craftsmanship ensures your home projects are completed with precision and care.",
+                "getStartedBtn": "One-Click Booking",
+                "keyFeaturesLabel": "- Key Services -",
+                "productLineReason": "Your Barcelona Handy Man",
+                "productLineDescription": "Expertise, reliability, and personalized service. Experience the difference with our comprehensive home maintenance solutions.",
+                "feature1Title": "General Maintenance",
+                "feature1Description": "Keep your home in top condition with our general maintenance services.",
+                "feature2Title": "Custom Carpentry",
+                "feature2Description": "Enhance your home with custom carpentry solutions tailored to your needs.",
+                "feature3Title": "Furniture Assembly",
+                "feature3Description": "Effortlessly put together your furniture with our professional assembly services.",
+                "productsLabel": "Our Services",
+                "firstProductTitle": "General Maintenance",
+                "firstProductDescription": "From minor repairs to routine upkeep, we handle all your home maintenance needs.",
+                "secondProductTitle": "Custom Carpentry",
+                "secondProductDescription": "Bespoke carpentry solutions designed to enhance the beauty and functionality of your home.",
+                "thirdProductTitle": "Furniture Assembly",
+                "thirdProductDescription": "Quick and reliable furniture assembly, ensuring your pieces are put together correctly and safely.",
+                "footerCompanyName": "Handyman Harrison",
+                "footerText": "© 2024 Handyman Harrison. "
+            },
+            es: {
+                "companyName": "Handyman Harrison",
+                "mainProductMessage": "Servicios Confiables de Mantenimiento del Hogar. Mano de Obra de Calidad a partir de €35.00 por hora",
+                "productDescription": "Bienvenido a Handyman Harrison, su experto en todas sus necesidades de mantenimiento del hogar. Desde carpintería hasta fontanería básica, nuestra hábil mano de obra asegura que sus proyectos domésticos se completen con precisión y cuidado.",
+                "getStartedBtn": "Reservar Ahora",
+                "keyFeaturesLabel": "- Servicios Clave -",
+                "productLineReason": "¿Por qué elegir Handyman Harrison?",
+                "productLineDescription": "Experiencia, fiabilidad y servicio personalizado. Experimente la diferencia con nuestras soluciones integrales de mantenimiento del hogar.",
+                "feature1Title": "Mantenimiento General",
+                "feature1Description": "Mantenga su hogar en óptimas condiciones con nuestros servicios de mantenimiento general.",
+                "feature2Title": "Carpintería a Medida",
+                "feature2Description": "Mejore su hogar con soluciones de carpintería a medida adaptadas a sus necesidades.",
+                "feature3Title": "Ensamblaje de Muebles",
+                "feature3Description": "Ensamble sus muebles de manera rápida y confiable con nuestros servicios profesionales de ensamblaje.",
+                "productsLabel": "Nuestros Servicios",
+                "firstProductTitle": "Mantenimiento General",
+                "firstProductDescription": "Desde reparaciones menores hasta el mantenimiento rutinario, nos encargamos de todas sus necesidades de mantenimiento del hogar.",
+                "secondProductTitle": "Carpintería a Medida",
+                "secondProductDescription": "Soluciones de carpintería a medida diseñadas para mejorar la belleza y funcionalidad de su hogar.",
+                "thirdProductTitle": "Ensamblaje de Muebles",
+                "thirdProductDescription": "Ensamblaje de muebles rápido y confiable, asegurando que sus piezas estén correctamente ensambladas y seguras.",
+                "footerCompanyName": "Handyman Harrison",
+                "footerText": "© 2024 Handyman Harrison."
+            }
+        };
+        function updateTextContent(language) {
+            const elements = [
+                { id: "company-name", key: "companyName" },
+                { id: "main-product-message", key: "mainProductMessage" },
+                { id: "product-description", key: "productDescription" },
+                { id: "get-started-btn", key: "getStartedBtn" },
+                { id: "key-features-label", key: "keyFeaturesLabel" },
+                { id: "product-line-reason", key: "productLineReason" },
+                { id: "product-line-description", key: "productLineDescription" },
+                { id: "feature-1-title", key: "feature1Title" },
+                { id: "feature-1-description", key: "feature1Description" },
+                { id: "feature-2-title", key: "feature2Title" },
+                { id: "feature-2-description", key: "feature2Description" },
+                { id: "feature-3-title", key: "feature3Title" },
+                { id: "feature-3-description", key: "feature3Description" },
+                { id: "products-label", key: "productsLabel" },
+                { id: "first-product-title", key: "firstProductTitle" },
+                { id: "first-product-description", key: "firstProductDescription" },
+                { id: "second-product-title", key: "secondProductTitle" },
+                { id: "second-product-description", key: "secondProductDescription" },
+                { id: "third-product-title", key: "thirdProductTitle" },
+                { id: "third-product-description", key: "thirdProductDescription" },
+                { id: "footer-company-name", key: "footerCompanyName" },
+                { id: "footer-text", key: "footerText" }
+            ];
+
+            elements.forEach(({ id, key }) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = textContent[language][key];
+                }
+            });
+
+            // Update button text
+            const langToggleBtn = document.querySelector('.language-toggle-button');
+            if (langToggleBtn) {
+                langToggleBtn.textContent = language === 'en' ? 'Español' : 'English';
+            }
+        }
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'es' : 'en';
+            updateTextContent(currentLanguage);
+        }
+        function scrollToContact() {
+            document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToBooking() {
+            document.querySelector('#one-click-book').scrollIntoView({ behavior: 'smooth' });
+        }
+
+    </script>
+
+
+</body>
+
+</html>
